@@ -74,7 +74,11 @@ users_new.users.each do |user_new|
 end
 
 
+updated_items = updated_items.sort_by! do |item|
+  item.stock + item.hatebu + item.tweet + item.share
+end
 
+updated_items.reverse!
 
 ## report mail
 
