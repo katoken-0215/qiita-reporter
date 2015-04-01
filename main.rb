@@ -67,7 +67,7 @@ class Item
   def hatebu
     body = Faraday.get(URL_HATEBU_API + @url).body
     if body != 'null'
-      JSON.parse(body).count
+      JSON.parse(body)['count'].to_i
     else
       0
     end
@@ -75,7 +75,7 @@ class Item
 
   def tweet
     body = Faraday.get(URL_TWITTER_API + @url).body
-    JSON.parse(body).count
+    JSON.parse(body)['count']
   end
 
   def share
