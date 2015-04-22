@@ -91,7 +91,7 @@ EOS
     puts '<h2>新しいユーザ</h2>'
     puts '<ul>'
     new_users.each do |user|
-      puts user.name
+      puts "<a href=\"http://qiita.com/#{ user.name }\">#{ user.name }</a>"
     end
     puts '</ul>'
   end
