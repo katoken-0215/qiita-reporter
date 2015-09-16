@@ -97,6 +97,7 @@ class Item
 end
 
 all_items = Organization.new('access').users.map do |user|
+  sleep(1)
   { user: user.name, items: user.items.map(&:to_hash) }
 end
 
