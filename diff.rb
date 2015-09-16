@@ -84,6 +84,17 @@ updated_items.reverse!
 
 unless new_items.length == 0 && updated_items.length == 0
   puts <<-"EOS"
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+body: { border: gray solid 1px; }
+a[href] { color: #15c; }
+h1, h2 { border-bottom: gray solid 1px; }
+li { line-height: 1.7; }
+</style>
+</head>
+<body>
 <h1>今週のQiita Organizationの動き</h1>
 EOS
 
@@ -120,13 +131,18 @@ EOS
         %(<a href="#{ item.url }">#{ item.title }</a> ) +
         %((<a href="http://qiita.com/#{ item.username }">#{ item.username }</a>) )
       puts %(<a href="#{ item.url }">ストック(+#{ item.stock })</a>) if item.stock > 0
-      puts %(<a href="https://twitter.com/share?text=#{ item.title }&url=#{ item.url }">Tweet(+#{ item.tweet })</a> ) if item.tweet > 0
-      puts %(<a href="#{ item.url }">はてブ(+#{ item.hatebu })</a> ) if item.hatebu > 0
+      puts %(<a href="https://twitter.com/search?q=#{ item.url }">Tweet(+#{ item.tweet })</a> ) if item.tweet > 0
+      puts %(<a href="https://b.hatena.ne.jp/entry/#{ item.url }">はてブ(+#{ item.hatebu })</a> ) if item.hatebu > 0
       puts %(<a href="http://www.facebook.com/sharer.php?u=#{ item.url }">シェア(+#{ item.share })</a> ) if item.share > 0
       puts '</li>'
     end
 
     puts '</ul>'
   end
+  puts <<-"EOS"
+<hr>
+<a href="http://gitbucket.tok.access-company.com:8080/kenji.kato/qiita-reporter">http://gitbucket.tok.access-company.com:8080/kenji.kato/qiita-reporter</a>
+</body>
+</html>
+EOS
 end
-
