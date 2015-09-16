@@ -55,7 +55,7 @@ class Item
 
   def date
     body = Faraday.get(@url).body
-    time = Nokogiri::HTML(body).at_css('time[itemprop]')
+    time = Nokogiri::HTML(body).at_css('time[itemprop=datePublished]')
     Date.parse(time.content)
   end
 
