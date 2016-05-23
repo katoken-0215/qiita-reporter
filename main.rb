@@ -10,8 +10,6 @@ require 'date'
 
 URL_QIITA_ORGANIZATION = 'http://qiita.com/organizations/access/members'
 URL_HATEBU_API = 'http://b.hatena.ne.jp/entry/json/'
-URL_TWITTER_API = 'http://urls.api.twitter.com/1/urls/count.json?url='
-URL_FACEBOOK_SHARE_API = 'http://graph.facebook.com/?id='
 
 class Organization
   attr_reader :name
@@ -51,17 +49,16 @@ class Item
   def initialize(title, url)
     @title = title
     @url = url
+    @body = Faraday.get(@url).body
   end
 
   def date
-    body = Faraday.get(@url).body
-    time = Nokogiri::HTML(body).at_css('time[itemprop=datePublished]')
+    time = Nokogiri::HTML(@body).at_css('time[itemprop=datePublished]')
     Date.parse(time.content)
   end
 
   def stock
-    body = Faraday.get(@url).body
-    Nokogiri::HTML(body).at_css('span.js-stocksCount').text.strip.to_i
+    Nokogiri::HTML(@body).at_css('span.js-stocksCount').text.strip.to_i
   end
 
   def hatebu
@@ -73,16 +70,6 @@ class Item
     end
   end
 
-  def tweet
-    body = Faraday.get(URL_TWITTER_API + @url).body
-    JSON.parse(body)['count']
-  end
-
-  def share
-    body = Faraday.get(URL_FACEBOOK_SHARE_API + @url).body
-    JSON.parse(body)['shares'] || 0
-  end
-
   def to_hash
     {
       title: @title,
@@ -90,8 +77,6 @@ class Item
       date: date,
       stock: stock,
       hatebu: hatebu,
-      tweet: tweet,
-      share: share
     }
   end
 end

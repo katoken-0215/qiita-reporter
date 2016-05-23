@@ -22,24 +22,22 @@ Items = Struct.new(:items) do
   end
 end
 
-Item = Struct.new(:title, :username, :url, :date, :stock, :hatebu, :tweet, :share) do
+Item = Struct.new(:title, :username, :url, :date, :stock, :hatebu) do
   def diff(other)
-    if stock - other.stock + (hatebu - other.hatebu) + (tweet - other.tweet) + (share - other.share) > 0
+    if stock - other.stock + (hatebu - other.hatebu) > 0
       ItemDiff.new(title, username, url, date,
                    stock - other.stock,
-                   hatebu - other.hatebu,
-                   tweet - other.tweet,
-                   share - other.share)
+                   hatebu - other.hatebu)
     end
   end
 end
 
-ItemDiff = Struct.new(:title, :username, :url, :date, :stock, :hatebu, :tweet, :share)
+ItemDiff = Struct.new(:title, :username, :url, :date, :stock, :hatebu)
 
 def load_json(s)
   users = JSON.parse(s).map do |entry|
     items = entry['items'].map do |item|
-      Item.new(item['title'], entry['user'], item['url'], item['date'], item['stock'], item['hatebu'], item['tweet'], item['share'])
+      Item.new(item['title'], entry['user'], item['url'], item['date'], item['stock'], item['hatebu'])
     end
     User.new(entry['user'], Items.new(items))
   end
@@ -75,7 +73,7 @@ end
 
 
 updated_items = updated_items.sort_by! do |item|
-  item.stock + item.hatebu + item.tweet + item.share
+  item.stock + item.hatebu
 end
 
 updated_items.reverse!
@@ -131,9 +129,7 @@ EOS
         %(<a href="#{ item.url }">#{ item.title }</a> ) +
         %((<a href="http://qiita.com/#{ item.username }">#{ item.username }</a>) )
       puts %(<a href="#{ item.url }">ストック(+#{ item.stock })</a>) if item.stock > 0
-      puts %(<a href="https://twitter.com/search?q=#{ item.url }">Tweet(+#{ item.tweet })</a> ) if item.tweet > 0
       puts %(<a href="https://b.hatena.ne.jp/entry/#{ item.url }">はてブ(+#{ item.hatebu })</a> ) if item.hatebu > 0
-      puts %(<a href="http://www.facebook.com/sharer.php?u=#{ item.url }">シェア(+#{ item.share })</a> ) if item.share > 0
       puts '</li>'
     end
 
