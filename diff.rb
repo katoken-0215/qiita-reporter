@@ -137,7 +137,6 @@ EOS
   end
   puts <<-"EOS"
 <hr>
-<a href="http://gitbucket.tok.access-company.com:8080/kenji.kato/qiita-reporter">http://gitbucket.tok.access-company.com:8080/kenji.kato/qiita-reporter</a>
 </body>
 </html>
 EOS
