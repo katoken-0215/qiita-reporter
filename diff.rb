@@ -22,22 +22,22 @@ Items = Struct.new(:items) do
   end
 end
 
-Item = Struct.new(:title, :username, :url, :date, :stock, :hatebu) do
+Item = Struct.new(:title, :username, :url, :date, :like, :hatebu) do
   def diff(other)
-    if stock - other.stock + (hatebu - other.hatebu) > 0
+    if like - other.like + (hatebu - other.hatebu) > 0
       ItemDiff.new(title, username, url, date,
-                   stock - other.stock,
+                   like - other.like,
                    hatebu - other.hatebu)
     end
   end
 end
 
-ItemDiff = Struct.new(:title, :username, :url, :date, :stock, :hatebu)
+ItemDiff = Struct.new(:title, :username, :url, :date, :like, :hatebu)
 
 def load_json(s)
   users = JSON.parse(s).map do |entry|
     items = entry['items'].map do |item|
-      Item.new(item['title'], entry['user'], item['url'], item['date'], item['stock'], item['hatebu'])
+      Item.new(item['title'], entry['user'], item['url'], item['date'], item['like'], item['hatebu'])
     end
     User.new(entry['user'], Items.new(items))
   end
@@ -73,7 +73,7 @@ end
 
 
 updated_items = updated_items.sort_by! do |item|
-  item.stock + item.hatebu
+  item.like + item.hatebu
 end
 
 updated_items.reverse!
@@ -128,7 +128,7 @@ EOS
       puts '<li>' +
         %(<a href="#{ item.url }">#{ item.title }</a> ) +
         %((<a href="http://qiita.com/#{ item.username }">#{ item.username }</a>) )
-      puts %(<a href="#{ item.url }">ストック(+#{ item.stock })</a>) if item.stock > 0
+      puts %(<a href="#{ item.url }">ストック(+#{ item.like })</a>) if item.like > 0
       puts %(<a href="https://b.hatena.ne.jp/entry/#{ item.url }">はてブ(+#{ item.hatebu })</a> ) if item.hatebu > 0
       puts '</li>'
     end
