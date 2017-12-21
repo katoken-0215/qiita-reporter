@@ -1,3 +1,3 @@
 source 'https://rubygems.org'
 
-gem 'oga'
+gem 'qiita_information'
